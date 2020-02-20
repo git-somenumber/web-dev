@@ -33,6 +33,7 @@ editor_div.addEventListener('keydown', function(event){
   else{
     console.log(event)
   }
+  text_line += cursor_p;
   editor_div.innerHTML = line.replace('%text-in-this-line%', text_line);
 });
 

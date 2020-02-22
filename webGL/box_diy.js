@@ -6,14 +6,18 @@ function main(){
 
     const fs = `
     uniform lowp vec4 color;
+    varying lowp vec4 vertColor;
     void main() {  
-        gl_FragColor = color;
+        gl_FragColor = vertColor;
       }
     `;
     const vs = `
+    attribute vec4 vertexColor;
     attribute vec4 aVertexPosition;
+    varying lowp vec4 vertColor;
     void main() {
       gl_Position = aVertexPosition;
+      vertColor = vertexColor;
     }`;
 
     const shaders = loadShaders(gl, fs, vs);
@@ -22,7 +26,8 @@ function main(){
       program : shaders,
       vertexShader :{
         attribute:{
-          vertexPosition : gl.getAttribLocation(shaders, 'aVertexPosition')
+          vertexPosition : gl.getAttribLocation(shaders, 'aVertexPosition'),
+          varyColor : gl.getAttribLocation(shaders, 'vertexColor')
         },
         uniform:{
           color : gl.getUniformLocation(shaders, 'color')
@@ -90,6 +95,7 @@ function initBuffers(gl){
 
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
+  
   const colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER,  colorBuffer);
 
@@ -98,11 +104,26 @@ function initBuffers(gl){
   ]
 
   gl.bufferData(gl.ARRAY_BUFFER,  new Float32Array(color), gl.STATIC_DRAW);
+
+  const vColorsBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vColorsBuffer);
+
+  vColor = [1.0, 1.0, 0.0, 1.0,
+    0.0, 1.0, 0.0, 1.0,
+    1.0, 1.0, 0.0, 1.0,
+    0.0, 1.0, 0.0, 1.0,]
+
+  gl.bufferData(gl.ARRAY_BUFFER,
+    new Float32Array(vColor),
+    gl.STATIC_DRAW);
+
+  
   return {
     verticx_B: vertexBuffer,
-    vertex_color: colorBuffer
+    vertex_color: colorBuffer,
+    varyColor : vColorsBuffer
   }
-
+  
 }
 
 function draw(gl ,programInfo, buffers){
@@ -116,13 +137,26 @@ function draw(gl ,programInfo, buffers){
   {
     gl.bindBuffer(gl.ARRAY_BUFFER, buffers.verticx_B);
     gl.vertexAttribPointer(
-      programInfo.vertexShader.vertexPosition,
+      programInfo.vertexShader.attribute.vertexPosition,
       2,
       gl.FLOAT,
       false,0,0
     );
-    gl.enableVertexAttribArray(programInfo.vertexShader.vertexPosition);
+    gl.enableVertexAttribArray(programInfo.vertexShader.attribute.vertexPosition);
     
+  }
+
+  {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.varyColor);
+    gl.vertexAttribPointer(
+      programInfo.vertexShader.attribute.varyColor,
+      4,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
+      gl.enableVertexAttribArray(programInfo.vertexShader.attribute.varyColor);
   }
 
   gl.useProgram(programInfo.program);

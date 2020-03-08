@@ -7,12 +7,12 @@ const editor_div = document.getElementById("editor");
 
 var content = editor_div.innerHTML;
 const letters = new RegExp('[A-z]{1}| |[0-9]');
+const editor = new Editor();
 
 console.log('working');
-var text_line = '';
-const line = `<span id=\'text\'>%text-in-this-line%</span>`;
-editor_div.addEventListener('keydown', function(event){
-  
+var line = editor.newLine();
+
+editor_div.addEventListener('keydown', function(event){  
   if(event.keyCode == 37) {
     console.log('Left');
   }
@@ -25,30 +25,29 @@ editor_div.addEventListener('keydown', function(event){
     text_line += '    ';
   }
   else if(event.key.match(RegExp('Enter'))){
-    text_line += '<br>';
+    line.end();
+    line = editor.newLine();
   }
   else if((event.key.match(letters))){
-    text_line += event.key;
+    line.add(event.key);
   }
   else{
     console.log(event)
   }
-  text_line += cursor_p;
-  editor_div.innerHTML = line.replace('%text-in-this-line%', text_line);
+  editor_div.innerHTML = editor.toHTML();
 });
 
 bold_button.addEventListener('click',function(event){
-
   console.log('Bold');
+  line.addStyle('font-weight:bold;')
 });
 
 italics_button.addEventListener('click',function(event){
-
   console.log('Italics');
+  line.addStyle('font-style:italic;')
 });
 
 underline_button.addEventListener('click',function(event){
-
   console.log('Underline');
 });
 

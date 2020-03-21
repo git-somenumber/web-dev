@@ -1,72 +1,154 @@
 class Base {
+    /**
+     * @param {string} style 
+     */
     constructor(style) {
         this.contents = "";
         this.styles = style;
+        this.html = `<span style="{style-here}">{text}</span>`;
+        this.currentHtml = this.html.replace(new RegExp("{text}"), style);
     }
 
     /**
      * @param {string} char
      */
     add(char) {
+        const textRegex = new RegExp("{text}");
         this.contents += char;
+        this.currentHtml = this.html.replace(textRegex, this.contents);
     }
 
+    /**
+     * @param {string} styles 
+     */
     addStyle(styles) {
         this.styles += styles;
+        var styleRegex = new RegExp("{style-here}");
+        this.currentHtml = this.html.replace(styleRegex, this.styles);
     }
 
+    /**
+     * 
+     * @param {string} style 
+     */
     resetStyle(style) {
         this.styles = style;
     }
 
+    /**
+     * @returns {string} Rendered Content
+     */
+    render(){
+        return this.currentHtml;
+    }
 
 }
 
+/**
+ * 
+ */
 class Line {
+    /**
+     * 
+     * @param {int} line 
+     * @param {string} style 
+     */
     constructor(line, style = '') {
         this.line = line;
-        this.base = new Base(style);
+        this.bases = [];
+        this.bases[0] = new Base(style);
         this.html = `<span style="{style-here}">{text}</span>`;
+        this.currentBase = 0;
+        this.end = false;
     }
 
+    /**
+     * 
+     * @param {string} character to be added
+     */
     add(ch){
-        this.base.add(ch)
+        this.bases[this.currentBase].add(ch)
     }
 
-    end(){
-        this.html += '<br>';
+    /**
+     * Ends the line
+     */
+    endLine(){
+        this.end = true;
     }
 
+    /**
+     * Adds a new line to the editor
+     */
     newLine(){
-        return new Line(this.line+1,this.base.styles);
+        return new Line(this.line+1,this.bases[this.currentBase].styles);
     }
 
+    /**
+     * Adds style to the line
+     * @param {string} styles 
+     */
     addStyle(styles) {
-        this.base.addStyle(styles)
+        this.bases[this.currentBase].addStyle(styles)
     }
 
+    /**
+     * Replaces the style for the line
+     * @param {string} style 
+     */
     resetStyle(style) {
-        this.base.resetStyle(style);
+        this.bases[this.currentBase].resetStyle(style);
     }
 
+    /**
+     * (Helper)
+     * Returns html for the line
+     * @returns {string} HTML to be put into DOM
+     */
     toHTML(){
-        const textRegex = new RegExp("{text}");
-        const styleRegex = new RegExp("{style-here}");
-        var htmlWithText = this.html.replace(textRegex, this.base.contents);
-        console.log(this.base.styles);
-        return htmlWithText.replace(styleRegex, this.base.styles);
+        let currentHtml = ''
+        this.bases.forEach(base => {
+            currentHtml += base.render();
+        });
+
+        if(this.end){
+            currentHtml += '<br>';
+        }
+
+        return currentHtml;
+    }
+
+    /**
+     * Creates a new base for the styles to
+     * be added in between line.
+     * @param {string} style 
+     */
+    addBase(style = ''){
+        this.bases.push(new Base(style));
+        this.currentBase++;
+    }
+
+    /**
+     * Leaves a base so that we may continue 
+     * with default style for the line.
+     */
+    escapeBase(){
+        this.currentBase--;
     }
 }
 
 class Editor {
     constructor(){
-        this.lines = {};
-        this.lineNum = 1;
+        this.lines = [];
+        this.lineNum = 0;
     }
 
+    /**
+     * Adds a line to the editor
+     * @param {int} line 
+     */
     addLine(line){
-        const x = "line" + this.lineNum;
-        this.lines[x] = line;
+        this.lines[this.lineNum] = line;
         this.lineNum++;
     }
 
@@ -76,12 +158,14 @@ class Editor {
         return line;
     }
 
+    /**
+     * Renders the final html to be put into DOM
+     */
     toHTML(){
         var html = "";
-        for(var i = 1;i<this.lineNum;i++){
-            var index = "line" + i;
-            html += this.lines[index].toHTML();
-        }
+        this.lines.forEach(line => {
+            html += line.toHTML();
+        });
         return html;
     }
 }

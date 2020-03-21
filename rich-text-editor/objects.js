@@ -39,7 +39,7 @@ class Base {
      * @returns {string} Rendered Content
      */
     render(){
-        return this.currentHtml;
+        return this.currentHtml.replace(new RegExp("{style-here}"), this.styles);
     }
 
 }
@@ -115,7 +115,7 @@ class Line {
             currentHtml += '<br>';
         }
 
-        return currentHtml;
+        return this.html.replace(new RegExp("{text}"),currentHtml);
     }
 
     /**
@@ -169,4 +169,3 @@ class Editor {
         return html;
     }
 }
-

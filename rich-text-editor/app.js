@@ -42,10 +42,13 @@ bold_button.addEventListener('click',function(event){
   if(!boldStatus){
     console.log('Bold');
     line.addBase('font-weight:bold;');
-
+    boldStatus = !boldStatus;
   }else if(boldStatus){
     line.escapeBase();
+    console.log('unBold')
+    boldStatus = !boldStatus;
   }
+  console.log(boldStatus);
 });
 
 italics_button.addEventListener('click',function(event){

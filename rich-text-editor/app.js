@@ -29,29 +29,39 @@ editorDiv.addEventListener('keydown', function (event) {
   } else {
     console.log(event)
   }
-  content = editor.toHTML()
+  editorDiv.innerHTML = editor.toHTML()
 })
 
 var boldStatus = false
 boldButton.addEventListener('click', function (event) {
-  if (!boldStatus) {
-    console.log('Bold')
-    line.addBase('font-weight:bold;')
-    boldStatus = !boldStatus
-  } else if (boldStatus) {
-    line.escapeBase()
-    console.log('unBold')
-    boldStatus = !boldStatus
-  }
+  styleEditor('font-weight:bold;', boldStatus)
+  boldStatus = !boldStatus
   console.log(boldStatus)
 })
 
+var italicsStatus = false
 italicsButton.addEventListener('click', function (event) {
-  console.log('Italics')
-  line.addStyle('font-style:italic;')
+  styleEditor('font-style:italic;', italicsStatus)
+  console.log(italicsStatus)
+  italicsStatus = !italicsStatus
 })
 
+var underlineStatus = false
 underlineButton.addEventListener('click', function (event) {
-  line.addStyle('text-decoration: underline;')
   console.log('Underline')
+
+  styleEditor('text-decoration: underline;', underlineStatus)
+  underlineStatus = !underlineStatus
 })
+
+function styleEditor (style, status) {
+  if (!status) {
+    console.log(style)
+
+    line.addBase(style)
+  } else if (status) {
+    console.log('Un ' + style)
+
+    line.addBase()
+  }
+}

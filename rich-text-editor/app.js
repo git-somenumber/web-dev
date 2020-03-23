@@ -29,7 +29,7 @@ editorDiv.addEventListener('keydown', function (event) {
   } else {
     console.log(event)
   }
-  editorDiv.innerHTML = editor.toHTML()
+  editorDiv.innerHTML = editor.toHTML() + '<span id="cursor">|</span>'
 })
 
 var boldStatus = false

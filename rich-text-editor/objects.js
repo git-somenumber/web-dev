@@ -9,7 +9,8 @@ class Base {
     this.contents = ''
     this.styles = style
     this.html = '<span style="{style-here}" id="{id-here}" class="{class-here}">{text}</span>'
-    this.currentHtml = this.html.replace(textRegex, style)
+    this.currentHtml = this.html.replace(styleRegex, style)
+    this.currentHtml = this.currentHtml.replace(textRegex, this.contents)
   }
 
   /**
@@ -26,6 +27,7 @@ class Base {
   addStyle (styles) {
     this.styles += styles
     this.currentHtml = this.html.replace(styleRegex, this.styles)
+    console.log(this.currentHtml + 'style Log')
   }
 
   /**
@@ -40,6 +42,8 @@ class Base {
      * @returns {string} Rendered Content
      */
   render () {
+    const h = this.currentHtml.replace(styleRegex, this.styles)
+    console.log(h)
     return this.currentHtml.replace(styleRegex, this.styles)
   }
 }
@@ -114,7 +118,7 @@ class Line {
     if (this.end) {
       currentHtml += '<br>'
     }
-
+    console.log(currentHtml)
     return this.html.replace(textRegex, currentHtml)
   }
 

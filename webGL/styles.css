@@ -1,0 +1,61 @@
+#container{
+    display: inline-grid;
+}
+
+.text{
+    font-size: large;
+    font-family: 'Courier New', Courier, monospace;
+    color: aliceblue;
+    display: inline;
+    position: absolute;
+}
+
+#one{
+    object-position: 0px 0px;
+    margin: 75px 100px;
+}
+
+#two{    
+    color: red;
+    margin: 75px 500px;
+}
+
+#three{
+    object-position: 300px 0px;
+    margin: 400px 500px;
+    color: blueviolet;
+}
+
+#four{
+    object-position: 0px 0px;
+    margin: 400px 100px;
+}
+
+#webGL{
+    object-position: 0px 0px;
+}
+
+.color{
+    display: inline;
+    position: absolute;
+}
+
+#color_one{
+    object-position: 0px 0px;
+    margin: 75px 100px;
+}
+
+#color_two{
+    object-position: 0px 0px;
+    margin: 75px 500px;
+}
+
+#color_three{
+    object-position: 0px 0px;
+    margin: 400px 500px;
+}
+
+#color_four{
+    object-position: 0px 0px;
+    margin: 400px 100px;
+}

@@ -1,0 +1,24 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558 
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "typescript",
+            "tsconfig": "tsconfig.json",
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "rich-text-editor-build",
+            "type": "shell",
+            "group": "build",
+            "command": "tsc rich-text-editor/objects.ts rich-text-editor/app.ts",
+            "problemMatcher": [
+                "$tsc"
+            ]
+        }
+    ]
+}
